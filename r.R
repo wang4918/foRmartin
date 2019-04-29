@@ -75,12 +75,16 @@ newwater <- water
 newwater <- crop(water, newclassed)
 plot(newclassed)
 
-newclassed <- projectRaster(classed, water, method = "ngb")
-
-watercontour <- rasterToContour(water, 7831*7961)
-plot(watercontour)
-
+newclassed <- classed
 newclassed@extent <- alignExtent(water@extent, newclassed, snap="near")
+newclassed <- projectRaster(classed, water, method = "ngb", alignOnly = TRUE)
+writeRaster(newclassed, "newclassed.tif", format = "GTiff")
+plot(newclassed)
+
+#watercontour <- rasterToContour(water, 7831*7961)
+#plot(watercontour)
+
+
 newraster <- overlay(water, newclassed, fun=function(x,y){return(10*x+y)})
 plot(newraster)
 
